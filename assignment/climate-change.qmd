@@ -104,7 +104,7 @@ You'll need to determine the file's delimiter and any comments or skips. You wil
 ```{r}
 dat <- read_table("https://data.giss.nasa.gov/gistemp/graphs/graph_data/Global_Mean_Estimates_based_on_Land_and_Ocean_Data/graph.txt",
                    skip = 5,
-                   col_names = c("Year", "Annual Mean", "Lowess Smoothing"))
+                   col_names = c("Year", "AnnualMean", "LowessSmoothing"))
 
 ```
 
@@ -115,8 +115,12 @@ Plot the trend in global mean temperatures over time. Describe what you see in t
 **Answer 5:**
 
 ```{r}
-ggplot(dat, aes(x = ))
+ggplot(dat, aes(x = Year, y = AnnualMean)) + 
+  geom_point() + 
+  labs(x = "Year", y = "Global Mean Temps")
 ```
+
+The plot shows the Global Mean temperature has steadily increased over time. It seems the average temp has spiked twice, likely due to heavy human movements.
 
 ## Evaluating the evidence for a "Pause" in warming?
 
@@ -130,12 +134,39 @@ Use a search engine (e.g., Google) or a chat LLM to find out how to calculate a 
 
 **Answer 6:**
 
+I searched calculate rolling means in R
+
+Website that helped: <https://www.geeksforgeeks.org/how-to-calculate-a-rolling-average-in-r/>
+
+I needed to download more libraries and write a new line of code that calculates the rolling average. I had to switch the k to 1.
+
+```{r}
+install.packages("zoo")
+install.packages("xts")
+
+library(zoo)
+library(xts)
+
+dat$Rolling_Avg <- rollmean(dat$AnnualMean, k = 10, fill = NA, align = "right")
+
+```
+
+```         
+```
+
 **Question 7:**
 
 -   What is the meaning of "5-year average" vs. "annual average"?
 -   Create a data frame from the annual temperature anomaly data (from Question 4) with three new columns: 5-year running averages, 10-year running averages, and 20-year running averages.
 
 **Answer 7:**
+
+A 5 year average is the average of 5 consecutive years while an annual average is the mean of all the years.
+
+```{r}
+Run <- dat |> 
+  mutate(year5 = rollmean(dat$AnnualMean, k = 5, fill = NA, align = "right"), year10 = rollmean(dat$AnnualMean, k = 10, fill = NA, align = "right"), year20 = rollmean(dat$AnnualMean, k = 20, fill = NA, align = "right"))
+```
 
 **Question 8:**
 
