@@ -181,6 +181,7 @@ ggplot(Run, aes(x = Year)) +
   geom_line(aes(y = year20, color = "20-Year Average"), size = 1) + 
   labs(y = "Averages")
 ```
+Chat GPT was used to teach me how to lay each average line on the same graph, and to color them differently.
 
 **Question 9:**
 
