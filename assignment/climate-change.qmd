@@ -32,14 +32,14 @@ co2
 ```
 
 ```{r}
-ggplot(co2, aes(x = decimal_date, y = monthly_average)) + 
+ggplot(co2, aes(x = decimal_date, y = CO2concentration)) + 
   geom_line() + 
   geom_line(aes(y = deseasonalized), color = "blue") +
   labs(x = "Year", y = "CO2 concentration (ppm)")
 
 carbon <-co2 |> 
   group_by(month) |> 
-  summarise(avgM = mean(monthly_average))
+  summarise(avgM = mean(CO2concentration))
 
 
 plot <- ggplot(carbon, aes(x = month, y = avgM)) + 
@@ -141,8 +141,7 @@ Website that helped: <https://www.geeksforgeeks.org/how-to-calculate-a-rolling-a
 I needed to download more libraries and write a new line of code that calculates the rolling average. I had to switch the k to 1.
 
 ```{r}
-install.packages("zoo")
-install.packages("xts")
+
 
 library(zoo)
 library(xts)
