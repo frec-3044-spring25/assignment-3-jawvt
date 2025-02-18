@@ -260,6 +260,8 @@ ggplot(final, aes(x = Year, y = CO2concentration)) +
   
 ```
 
+Recent Co2 observations compared to historical observations are very different. There has always been a gradual increase in co2 from around 4000 BC to 100 AC. The data from 1958 to 2025 indicates an almost vertical increase compared to the historical increase. It seems much more human activity has occurred in those 70 years that the rest of history.
+
 # Render and committing
 
 Remember to Render your document as HTML and comment+push to GitHub your code and rendered HTML that was created when you knitted the document. Your GitHub repository should have multiple commits with informative commit messages.
