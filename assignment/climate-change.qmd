@@ -1,6 +1,6 @@
 ---
 title: "Climate Change Module"
-author: 'Add name'
+author: Alex Wood
 format:
   html:
     embed-resources: true
@@ -23,8 +23,8 @@ To read the code, you will use a new function called `read_table`. It is similar
 
 co2 <-  read_table("https://gml.noaa.gov/webdata/ccgg/trends/co2/co2_mm_mlo.txt", 
                   comment="#",
-                  col_names = c("year", "month", "decimal_date",
-                                "monthly_average",
+                  col_names = c("Year", "month", "decimal_date",
+                                "CO2concentration",
                                 "deseasonalized", "days", "sd_days",
                                 "unc_month_mean"),
                   na = c("-1", "-99.99"))
@@ -147,7 +147,7 @@ install.packages("xts")
 library(zoo)
 library(xts)
 
-dat$Rolling_Avg <- rollmean(dat$AnnualMean, k = 10, fill = NA, align = "right")
+dat$Rolling_Avg <- rollmean(dat$AnnualMean, k = 1, fill = NA, align = "right")
 
 ```
 
@@ -174,11 +174,22 @@ Plot the different averages on the *same plot* and describe what differences you
 
 **Answer 8:**
 
+```{r}
+ggplot(Run, aes(x = Year)) +
+  geom_line(aes(y = AnnualMean, color = "Annual Average"), alpha = 0.5) +
+  geom_line(aes(y = year5, color = "5-Year Average"), size = 1) +
+  geom_line(aes(y = year10, color = "10-Year Average"), size = 1) +
+  geom_line(aes(y = year20, color = "20-Year Average"), size = 1) + 
+  labs(y = "Averages")
+```
+
 **Question 9:**
 
 By examining the data here, what evidence do you find or not find for such a pause?
 
 **Answer 9:**
+
+Looking at the plot, there does not seem to be much of a pause in Average CO2 emission since 1998. In fact all the averages seem to be increasing more.
 
 ## Longer term trends in CO2 Records
 
@@ -219,9 +230,34 @@ Your answer to Question 10 is going to be a mix of code chunks and text that you
 
 **Answer 10:**
 
+The data set contains 4 columns which include the depth in meters, age of ice in (yr BP), age of air in (yr BP), and co2 concentration in ppvm.
+
+The temporal resolution of the data is from 363 observations of different depths of Ice recorded between 4 climate cycles in january 1998. The deeper the ice is, the older the air and ice are.
+
 ```{r}
+vostok <-  read_table("vostok.icecore.co2", 
+                  skip = 20,
+                  col_names = c("Depth(m)", "IceAge", "AirAge",
+                                "CO2concentration"))
+Ice <- vostok |> 
+  mutate(Age = IceAge - AirAge) |> 
+  arrange(desc(Age)) |> 
+  mutate(Year = 2025 - Age) 
+ 
 
 
+ggplot(Ice, aes(x = Year, y = CO2concentration)) + 
+  geom_point() + 
+  labs(x = "Age (- = BC)", y = 'CO2 concentration (ppvm)')
+  
+```
+
+```{r}
+final <- bind_rows(Ice, co2)
+
+ggplot(final, aes(x = Year, y = CO2concentration)) + 
+  geom_point() 
+  
 ```
 
 # Render and committing
